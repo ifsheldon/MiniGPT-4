@@ -174,7 +174,6 @@ with gr.Blocks() as demo:
 
     clear.click(gradio_reset,
                 None,
-                [chatbot, image, text_input, upload_button, chat_state, img_list, img_emb_list, gallery],
-                queue=False)
+                [chatbot, image, text_input, upload_button, chat_state, img_list, img_emb_list, gallery])
 
 demo.launch(share=False, enable_queue=True, server_name="0.0.0.0", server_port=7861)
