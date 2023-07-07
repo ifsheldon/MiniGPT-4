@@ -33,3 +33,6 @@ python -m fastchat.model.apply_delta --base /path/to/llama-13bOR7b-hf/  --target
 
 Now you are good to go!
 
+### Tips
+* https://huggingface.co/decapoda-research/llama-13b-hf
+* When error containing `LlaMaTokenizer not found`, change the corresponding code to `LlamaTokenizer`
