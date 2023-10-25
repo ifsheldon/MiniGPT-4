@@ -72,8 +72,8 @@ def gradio_reset():
     # reset chatbot, image, text_input, upload_button, chat_state, img_list, img_emb_list, gallery
     return None, \
         gr.update(value=None, interactive=True), \
-        gr.update(placeholder='Please upload your image first', interactive=False), \
-        gr.update(value="Upload & Start Chat", interactive=True), \
+        gr.update(placeholder='请先上传图片', interactive=False), \
+        gr.update(value="上传图片，开始对话", interactive=True), \
         CONV_VISION.copy(), \
         [], \
         [], \
@@ -88,8 +88,8 @@ def upload_img(gr_img, chat_state, img_list, img_emb_list):
     chat.upload_img(gr_img, chat_state, img_emb_list)
     # update image, text_input, upload_button, chat_state, gallery, img_emb_list
     return gr.update(value=None, interactive=False), \
-        gr.update(interactive=True, placeholder='Type and press Enter'), \
-        gr.update(value="Send more images after sending a message", interactive=False), \
+        gr.update(interactive=True, placeholder='输入，按回车发送'), \
+        gr.update(value="发消息后上传更多图片", interactive=False), \
         chat_state, \
         img_list, \
         img_emb_list
@@ -97,7 +97,7 @@ def upload_img(gr_img, chat_state, img_list, img_emb_list):
 
 def gradio_ask(user_message, chatbot, chat_state):
     if len(user_message) == 0:
-        return gr.update(interactive=True, placeholder='Input should not be empty!'), chatbot, chat_state
+        return gr.update(interactive=True, placeholder='输入不能为空'), chatbot, chat_state
     chat.ask(user_message, chat_state)
     chatbot = chatbot + [[user_message, None]]
     return '', chatbot, chat_state
@@ -115,26 +115,21 @@ def gradio_answer(chatbot, chat_state, img_list, num_beams, temperature):
     return chatbot, \
         chat_state, \
         gr.update(interactive=True), \
-        gr.update(value="Send more image", interactive=True)
+        gr.update(value="上传更多图片", interactive=True)
 
 
-title = """<h1 align="center">Demo of MiniGPT-4</h1>"""
-description = """<h3>This is the demo of MiniGPT-4. Upload your images and start chatting!</h3>"""
-article = """<p><a href='https://minigpt-4.github.io'><img src='https://img.shields.io/badge/Project-Page-Green'></a></p><p><a href='https://github.com/Vision-CAIR/MiniGPT-4'><img src='https://img.shields.io/badge/Github-Code-blue'></a></p><p><a href='https://raw.githubusercontent.com/Vision-CAIR/MiniGPT-4/main/MiniGPT_4.pdf'><img src='https://img.shields.io/badge/Paper-PDF-red'></a></p>
-"""
+title = """<h1 align="center">MiniGPT 4</h1>"""
 
 #TODO show examples below
 
 with gr.Blocks() as demo:
     gr.Markdown(title)
-    gr.Markdown(description)
-    gr.Markdown(article)
 
     with gr.Row():
         with gr.Column(scale=0.5):
             image = gr.Image(type="pil")
-            upload_button = gr.Button(value="Upload & Start Chat", interactive=True, variant="primary")
-            clear = gr.Button("Restart")
+            upload_button = gr.Button(value="上传图片开始对话", interactive=True, variant="primary")
+            clear = gr.Button("重新开始")
             
             num_beams = gr.Slider(
                 minimum=1,
@@ -142,7 +137,7 @@ with gr.Blocks() as demo:
                 value=1,
                 step=1,
                 interactive=True,
-                label="beam search numbers)",
+                label="光束搜索数",
             )
             
             temperature = gr.Slider(
@@ -151,17 +146,17 @@ with gr.Blocks() as demo:
                 value=1.0,
                 step=0.1,
                 interactive=True,
-                label="Temperature",
+                label="随机性",
             )
 
         with gr.Column():
             chat_state = gr.State(CONV_VISION.copy())
             img_list = gr.State([])
             img_emb_list = gr.State([])
-            gallery = gr.Gallery(label="Uploaded Images", show_label=True) \
+            gallery = gr.Gallery(label="已上传图片", show_label=True) \
                 .style(rows=[1], object_fit="scale-down", height="500px", preview=True)
-            chatbot = gr.Chatbot(label='MiniGPT-4')
-            text_input = gr.Textbox(label='User', placeholder='Please upload your image first', interactive=False)
+            chatbot = gr.Chatbot(label='MiniGPT 4')
+            text_input = gr.Textbox(label='用户输入', placeholder='请先上传图片', interactive=False)
 
     upload_button.click(upload_img, [image, chat_state, img_list, img_emb_list],
                         [image, text_input, upload_button, chat_state, gallery, img_emb_list])
